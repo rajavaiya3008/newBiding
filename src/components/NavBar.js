@@ -31,14 +31,14 @@ const NavBar = () => {
         coinCount: prev.coinCount + 1,
       };
     });
-    if (submit) {
-      setLocalStorageItem("submit", false);
-      setSubmit(false);
-      setCurrIndex((prev) => {
-        setLocalStorageItem("currIndex", prev + 1);
-        return prev + 1;
-      });
-    }
+    // if (submit) {
+    //   setLocalStorageItem("submit", false);
+    //   setSubmit(false);
+    //   setCurrIndex((prev) => {
+    //     setLocalStorageItem("currIndex", prev + 1);
+    //     return prev + 1;
+    //   });
+    // }
   };
 
   const handleResult = () => {

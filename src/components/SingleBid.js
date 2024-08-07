@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import InputField from "../shared/InputField";
 import { validation } from "../utils/validation";
 import { toast } from "react-toastify";
@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { getLocalStorageItem, setLocalStorageItem } from "../utils/localStorageFunction";
 import { generateRandomIndex } from "../utils/commonFunction";
 
-const playUser = allUsers.filter((user) => user !== allUsers[0]);
+// const playUser = allUsers.filter((user) => user !== allUsers[0]);
 
 const SingleBid = ({ bid, index }) => {
   const navigate = useNavigate();
@@ -31,8 +31,10 @@ const SingleBid = ({ bid, index }) => {
     submit,
     setSubmit,
   } = useContext(AppContext);
-  const [remainUser, setRemainUser] = useState(getLocalStorageItem('remainUser')||playUser);
-  const disable = currIndex !== index || submit;
+  const [remainUser, setRemainUser] = useState(getLocalStorageItem('remainUser') || allUsers);
+
+  const disable = ((currIndex !== index) || (coin.coin < Number(bid.amount)));
+  // const disable = ((currIndex !== index) || submit);
   const handleSubmit = (index, bid) => {
     const error = validation(bid);
     if (Object.keys(error).length) {
@@ -41,6 +43,8 @@ const SingleBid = ({ bid, index }) => {
     }
     setLocalStorageItem("submit", true);
     setSubmit(true);
+    setLocalStorageItem('currIndex',currIndex+1)
+    setCurrIndex(currIndex+1)
     const price = Number(bid.amount) + 500;
     if (coin.coin > price) {
       setCoin((prev) => {
@@ -53,15 +57,15 @@ const SingleBid = ({ bid, index }) => {
           coin: prev.coin - bid.amount,
         };
       });
-      setLocalStorageItem('currIndex',index + 1)
-      setCurrIndex(index + 1);
+      // setLocalStorageItem('currIndex',index + 1)
+      // setCurrIndex(index + 1);
       setLocalStorageItem("submit", false);
       setSubmit(false);
     }
-    if (coin.coin < price && remainUser.length !== 1) {
+    if (coin.coin - bid.amount < price && remainUser.length !== 1) {
       toast.info("Coin is not Enough");
     }
-    if ((coin.coinCount > 1 && coin.coin < price) || price === 3000) {
+    if ((coin.coinCount === 2  && coin.coin-bid.amount < price) || price === 3000) {
       // console.log("enter in to if");
       setUsers((prev) => {
         setLocalStorageItem("users", {
@@ -74,7 +78,8 @@ const SingleBid = ({ bid, index }) => {
         };
       });
       // console.log("remainUser", remainUser);
-      const playedUser = remainUser.filter((user) => user !== currUser);
+      // const playedUser = remainUser.filter((user) => user !== getLocalStorageItem('currUser'));
+      const playedUser = allUsers.filter((user) => !Object.keys(getLocalStorageItem('users'))?.includes(user) && getLocalStorageItem('currUser') !== user)
       // console.log("playedUser", playedUser);
       if (playedUser.length === 0) {
         // console.log("remainUser", remainUser);
@@ -86,8 +91,11 @@ const SingleBid = ({ bid, index }) => {
         navigate("/results", { state: { winnerUser, value, uniqValData } });
         return;
       }
-      setLocalStorageItem('remainUser',playedUser)
-      setRemainUser(() => playedUser);
+      // setLocalStorageItem('remainUser',playedUser)
+      setRemainUser((prev) => {
+        setLocalStorageItem('remainUser',playedUser)
+        return playedUser
+      });
       const min = 0;
       const max = playedUser.length - 1;
       const randomUser = generateRandomIndex(min,max);
