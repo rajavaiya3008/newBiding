@@ -1,19 +1,35 @@
-import React from 'react'
+import React from "react";
 
-const InputField = ({id,name,value,handleChange,index,currIndex}) => {
+const InputField = ({
+  id,
+  name,
+  value,
+  bid,
+  handleChange,
+  disable,
+  index,
+  currIndex,
+  error,
+}) => {
   return (
-    <div>
-        <input 
-        type='number'
+    <div className="flex flex-col">
+      <input
+        type="number"
         name={name}
         id={id}
         value={value}
         onChange={(e) => handleChange(e)}
-        disabled={currIndex !== index}
-        className='border'
-        />
+        onKeyDown={(evt) =>
+          ["e", "E", "+", "-", "."].includes(evt.key) && evt.preventDefault()
+        }
+        disabled={disable}
+        className="border"
+      />
+      {error[name] && currIndex === index && (
+        <span className="text-red-400 text-sm">{error[name]}</span>
+      )}
     </div>
-  )
-}
+  );
+};
 
-export default InputField
+export default InputField;

@@ -1,25 +1,34 @@
-import { useState } from "react";
-import SingleBid from "./components/SingleBid";
-import { bidData } from "./utils/bidData";
+import { useContext, useEffect } from "react";
+import NavBar from "./components/NavBar";
+import { Outlet } from "react-router-dom";
+import { AppContext } from "./context/AppContextProvider";
+import { getLocalStorageItem } from "./utils/localStorageFunction";
 
 function App() {
-  const [data, setdata] = useState(bidData)
-  const [currIndex,setCurrIndex] = useState(0);
-  const handleChange = (e) => {
-    const {id,name,value} = e.target;
-    const newBid = data.map((curr) => 
-      curr.amount === id ? { ...curr, [name]: value } : curr
-    );
-    console.log('newBid', newBid)
-    setdata(newBid)
-  }
+  const {
+    setData,
+    setCurrIndex,
+    setCoin,
+    setSubmit,
+    setUsers,
+    setCurrUser
+  } = useContext(AppContext)
+
+  // useEffect(() => {
+  //   if(getLocalStorageItem('bidData')){
+  //     setData(getLocalStorageItem('bidData'))
+  //     setCurrIndex(getLocalStorageItem('currIndex'))
+  //     setCoin(getLocalStorageItem('coin') || { coin: 0, coinCount: 0 })
+  //     setSubmit(getLocalStorageItem('submit'))
+  //     setUsers(getLocalStorageItem('users'))
+  //     setCurrUser(getLocalStorageItem('currUser'))
+  //   }
+  // },[])
+
   return (
-    <div className="grid grid-cols-3 gap-4">
-      {
-        data.map((bid,i) => (
-          <SingleBid bid={bid} key={i} handleChange={handleChange} index={i} currIndex={currIndex} setCurrIndex={setCurrIndex}/>
-        ))
-      }
+    <div>
+      <NavBar />
+      <Outlet />
     </div>
   );
 }
