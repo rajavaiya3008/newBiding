@@ -4,7 +4,6 @@ const InputField = ({
   id,
   name,
   value,
-  bid,
   handleChange,
   disable,
   index,
@@ -12,7 +11,7 @@ const InputField = ({
   error,
 }) => {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col h-[46px]">
       <input
         type="number"
         name={name}

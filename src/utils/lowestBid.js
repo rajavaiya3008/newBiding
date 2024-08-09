@@ -1,5 +1,4 @@
 export const lowestUniqBid = (usersBid) => {
-  //   console.log("usersBid", usersBid);
   const keys = Object.keys(usersBid);
   const updatedData = keys.reduce((acc, curr) => {
     if (!acc[curr]) {
@@ -15,26 +14,13 @@ export const lowestUniqBid = (usersBid) => {
     return acc;
   }, {});
 
-  //   console.log("updatedData", updatedData);
-
-  const uniqValData = {};
-  const finalUniqBidArr = [];
-
+  const allBidVal = [];
   for (let key in updatedData) {
-    uniqValData[key] = findUniqueElements(updatedData[key]);
-    finalUniqBidArr.push(...uniqValData[key]);
+    allBidVal.push(...updatedData[key]);
   }
-  //   console.log("uniqValData", uniqValData);
-  const finalAns = findUniqueElements(finalUniqBidArr);
-  //   console.log("finalAns", finalAns);
-  let winnerUser;
-  for (let key in uniqValData) {
-    if (uniqValData[key].includes(finalAns[0])) {
-      winnerUser = key;
-    }
-  }
-  //   console.log("winnerUser", winnerUser);
-  return { value: finalAns[0], winnerUser, uniqValData };
+  const uniqBid = findUniqueElements(allBidVal);
+
+  return uniqBid;
 };
 
 function findUniqueElements(arr) {

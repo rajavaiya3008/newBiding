@@ -3,7 +3,10 @@ export const validation = (bid) => {
   const error = keys.reduce((acc, curr) => {
     bid[curr].replace(/^0+/, "");
     const zero = bid[curr].replace(/^0+/, "");
-    if (bid[curr] === "" || zero === "") {
+    if(zero === ""){
+        acc[curr] = "Zero not Allowed"
+    }
+    if (bid[curr] === "") {
       acc[curr] = "Please Fill";
     }
     if (bid[curr].length > 7) {
